@@ -18,11 +18,10 @@ build_script:
 
 test_script:
   - ps: Invoke-WebRequest  "ftp.ebi.ac.uk/pub/databases/metabolights/studies/public" -OutFile "example_files\metabolights"
-  - ps: wget https://github.com/ISA-tools/ISAvalidator-ISAconverter-BIImanager/releases/download/1.6.5/ISA-validator-1.6.5.zip
+  - ps: wget https://github.com/ISA-tools/ISAvalidator-ISAconverter-BIImanager/releases/download/1.6.5/ISA-validator-1.6.5.zip -o ISA-validator-1.6.5.zip
   - dir
   - unzip ISA-validator-1.6.5.zip
-  - ps: wget ftp://ftp.ebi.ac.uk/pub/databases/metabolights/submissionTool/ISAcreatorMetaboLights.zip
-
+  - ps: wget ftp://ftp.ebi.ac.uk/pub/databases/metabolights/submissionTool/ISAcreatorMetaboLights.zip -o ISAcreatorMetaboLights.zip 
   - unzip ISAcreatorMetaboLights.zip
   - mzml2isa -i example_files\metabolights\MTBLS267 -o out_folder\metabolights -s MTBLS267
   - java -cp ISA-validator-1.6.5\isatools_deps.jar org.isatools.isatab.manager.SimpleManager validate out_folder\metabolights\MTBLS267 Configurations\MetaboLightsConfig20140506\
