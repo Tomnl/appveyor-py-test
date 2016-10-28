@@ -1,5 +1,5 @@
 init:
-  - mkdir example_files\metabolights
+  mkdir example_files\metabolights
   ps: |
        $source = "ftp.ebi.ac.uk/pub/databases/metabolights/studies/public"
        $destination = "example_files\metabolights"
