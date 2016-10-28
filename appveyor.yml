@@ -1,6 +1,3 @@
-init:
-
-
 environment:
   matrix:
     - PYTHON: "C:\\Python27"
@@ -21,7 +18,7 @@ build_script:
 
 test_script:
   - mkdir example_files\metabolights
-  - Invoke-WebRequest "ftp.ebi.ac.uk/pub/databases/metabolights/studies/public" -OutFile "example_files\metabolights"
+  - ps: Invoke-WebRequest  "ftp.ebi.ac.uk/pub/databases/metabolights/studies/public" -OutFile "example_files\metabolights"
   - wget https://github.com/ISA-tools/ISAvalidator-ISAconverter-BIImanager/releases/download/1.6.5/ISA-validator-1.6.5.zip
   - unzip ISA-validator-1.6.5.zip
   - wget ftp://ftp.ebi.ac.uk/pub/databases/metabolights/submissionTool/ISAcreatorMetaboLights.zip
