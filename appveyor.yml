@@ -15,10 +15,17 @@ init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 
 install:
-  - "%PYTHON%/Scripts/pip.exe install wheel"
-  - "%PYTHON%/Scripts/pip.exe install six"
-  - "%PYTHON%/Scripts/pip.exe install lxml==3.6"
+  - "%PYTHON%/Scripts/pip.exe install six lxml==3.6"
   - "%PYTHON%/Scripts/pip.exe install -r requirements.txt"
   - "%PYTHON%/Scripts/pip.exe install ."
 
+test_script:
+  - mkdir example_files/metabolights
+  - curlftpfs ftp.ebi.ac.uk/pub/databases/metabolights/studies/public example_files/metabolights
+  - wget https://github.com/ISA-tools/ISAvalidator-ISAconverter-BIImanager/releases/download/1.6.5/ISA-validator-1.6.5.zip
+  - unzip ISA-validator-1.6.5.zip
+  - wget ftp://ftp.ebi.ac.uk/pub/databases/metabolights/submissionTool/ISAcreatorMetaboLights.zip
+  - unzip ISAcreatorMetaboLights.zip
+  - mzml2isa -i example_files/metabolights/MTBLS267 -o out_folder/metabolights -s MTBLS267
+  - java -cp ISA-validator-1.6.5/isatools_deps.jar org.isatools.isatab.manager.SimpleManager validate out_folder/metabolights/MTBLS267 Configurations/MetaboLightsConfig20140506/
 
