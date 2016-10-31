@@ -302,5 +302,4 @@ def compr_extract(compr_pth, type_):
 
 
 if __name__ == '__main__':
-    freeze_support()
     run()

@@ -1,7 +1,8 @@
 MANIFEST.in
 README.rst
+requirements-py2-win.txt
 requirements-py2.txt
-requirements-py34.txt
+requirements-win.txt
 requirements.txt
 setup.py
 isa_config/mzml2isa.png
