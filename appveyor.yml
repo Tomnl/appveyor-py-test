@@ -9,7 +9,7 @@ environment:
 install:
   - git clone https://github.com/althonos/pronto
   - cd pronto
-  - "%PYTHON%/python.exe setup install"
+  - "%PYTHON%/python.exe setup.py install"
   - "%PYTHON%/Scripts/pip.exe install six"
   - "%PYTHON%/Scripts/pip.exe install ."
 
