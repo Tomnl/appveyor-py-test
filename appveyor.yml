@@ -10,6 +10,7 @@ install:
   - "%PYTHON%/Scripts/pip.exe install six lxml==3.6.0"
   - git clone https://github.com/althonos/pronto
   - cd pronto
+  - cd ..
   - "%PYTHON%/python.exe setup.py install"
   - "%PYTHON%/Scripts/pip.exe install ."
 
