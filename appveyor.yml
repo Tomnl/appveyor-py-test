@@ -7,11 +7,12 @@ environment:
 
 
 install:
+  - "%PYTHON%/Scripts/pip.exe install six lxml==3.6.0"
   - git clone https://github.com/althonos/pronto
   - cd pronto
   - "%PYTHON%/python.exe setup.py install"
-  - "%PYTHON%/Scripts/pip.exe install six"
   - "%PYTHON%/Scripts/pip.exe install ."
+
 
 build_script:
   # Build the compiled extension
