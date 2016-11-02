@@ -31,6 +31,7 @@ import json
 import tarfile
 import zipfile
 
+from multiprocessing import freeze_support
 from multiprocessing.pool import Pool
 from pronto import Ontology
 
@@ -302,4 +303,5 @@ def compr_extract(compr_pth, type_):
 
 
 if __name__ == '__main__':
+    freeze_support()
     run()
