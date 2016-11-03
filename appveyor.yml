@@ -23,7 +23,7 @@ test_script:
   - unzip ISA-validator-1.6.5.zip
   - ps: wget ftp://ftp.ebi.ac.uk/pub/databases/metabolights/submissionTool/ISAcreatorMetaboLights.zip -o ISAcreatorMetaboLights.zip 
   - unzip ISAcreatorMetaboLights.zip
-  - python mzml2isa\parsing.py -i 'isatab files\MTBLS3\' -o out_folder\metabolights -s MTBLS3
+  - python mzml2isa\parsing.py -i "isatab files\MTBLS3\" -o out_folder\metabolights -s MTBLS3
   - java -cp ISA-validator-1.6.5\isatools_deps.jar org.isatools.isatab.manager.SimpleManager validate out_folder\metabolights\MTBLS267 Configurations\MetaboLightsConfig20140506\
 
 after_test:
