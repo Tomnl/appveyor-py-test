@@ -230,11 +230,11 @@ def full_parse(in_dir, out_dir, study_identifier, usermeta=None, split=True, mer
 
 
     if mzml_files:
-        # store the first elemnts extension
+        # store the first mzml_files extension
         if compr:
-            ext1 = mzml_files[1].name.split(os.path.extsep)[-1]
+            ext1 = mzml_files[0].name.split(os.path.extsep)[-1]
         else:
-            ext1 = mzml_files[1].split(os.path.extsep)[-1]
+            ext1 = mzml_files[0].split(os.path.extsep)[-1]
 
         if multip:
             jobs = []
@@ -263,8 +263,8 @@ def full_parse(in_dir, out_dir, study_identifier, usermeta=None, split=True, mer
                    ext = i.name.split(os.path.extsep)[-1]
                 else:
                    ext = i.split(os.path.extsep)[-1]
-                parser = _PARSERS[ext]
-                ont = _ONTOLOGIES[ext]
+                parser = PARSERS[ext]
+                ont = ONTOLOGIES[ext]
 
                 metalist.append(parser(i, ont).meta)
 
