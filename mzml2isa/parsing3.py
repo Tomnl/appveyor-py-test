@@ -58,7 +58,8 @@ from mzml2isa.versionutils import longest_substring
 #     ont = _ONTOLOGIES[filepath.split(os.path.extsep)[-1]]
 #     return parser(filepath, ont).meta_isa
 
-def _multiparse(filepath, metalist, win):
+def _multiparse(filepath, PARSERS, ONTOLOGIES, metalist, win):
+
     dirname = os.path.dirname(os.path.realpath(__file__))
     if not any(x in sys.argv for x in ('-h', '--help', '--version')):
         _ms = Ontology(os.path.join(dirname, "psi-ms.obo"), False)
