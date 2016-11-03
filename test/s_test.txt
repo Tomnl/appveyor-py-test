@@ -1,0 +1,3 @@
+"Source Name"	"Characteristics[Organism]"	"Term Source REF"	"Term Accession Number"	"Characteristics[Variant]"	"Term Source REF"	"Term Accession Number"	"Characteristics[Organism part]"	"Term Source REF"	"Term Accession Number"	"Protocol REF"	"Sample Name"
+""	""	""	""	""	""	""	""	""	""	"Sample collection"	"Daph_P_WAX_1_LCMS-FC_Phenyl_neg_inj2"
+""	""	""	""	""	""	""	""	""	""	"Sample collection"	"Daph_P_WCX_1_LCMS-FC_Phenyl_neg_inj1"

@@ -1,0 +1,3 @@
+"Source Name"	"Characteristics[Organism]"	"Term Source REF"	"Term Accession Number"	"Characteristics[Variant]"	"Term Source REF"	"Term Accession Number"	"Characteristics[Organism part]"	"Term Source REF"	"Term Accession Number"	"Protocol REF"	"Sample Name"
+"A01_Polar_Daph_WAX4_Phenyl_LCMS_Neg_DIMS - Copy"	""	""	""	""	""	""	""	""	""	"Sample collection"	"A01_Polar_Daph_WAX4_Phenyl_LCMS_Neg_DIMS - Copy"
+"A01_Polar_Daph_WAX4_Phenyl_LCMS_Neg_DIMS"	""	""	""	""	""	""	""	""	""	"Sample collection"	"A01_Polar_Daph_WAX4_Phenyl_LCMS_Neg_DIMS"

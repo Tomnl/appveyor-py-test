@@ -31,9 +31,7 @@ import json
 import tarfile
 import zipfile
 
-from multiprocessing import freeze_support, Process, Manager
-
-#from multiprocessing.pool import Pool
+from multiprocessing.pool import Pool
 from pronto import Ontology
 
 try:
@@ -50,37 +48,32 @@ import mzml2isa.mzml as mzml
 from mzml2isa.versionutils import longest_substring
 
 
+_PARSERS = {'mzML': mzml.mzMLmeta,
+           'imzML': mzml.imzMLmeta}
+
+# change the ontology and start extracting imaging specific metadata
+warnings.simplefilter('ignore')
+dirname = os.path.dirname(os.path.realpath(__file__))
+
+if not any(x in sys.argv for x in ('-h', '--help', '--version')):
+    _ms = Ontology(os.path.join(dirname, "psi-ms.obo"), False)
+    _ims = Ontology(os.path.join(dirname, "imagingMS.obo"), False)
+    _ims.terms.update(_ms.terms)
+else:
+    _ms, _ims = None, None
+#_ims.merge(_ms)
 
 
-# def _multiparse(filepath):
-#     print('Parsing file: {}'.format(filepath))
-#     parser = _PARSERS[filepath.split(os.path.extsep)[-1]]
-#     ont = _ONTOLOGIES[filepath.split(os.path.extsep)[-1]]
-#     return parser(filepath, ont).meta_isa
+_ONTOLOGIES = {'mzML': _ms,
+               'imzML': _ims }
+del dirname
 
-def _multiparse(filepath, metalist, win):
-    dirname = os.path.dirname(os.path.realpath(__file__))
-    if not any(x in sys.argv for x in ('-h', '--help', '--version')):
-        _ms = Ontology(os.path.join(dirname, "psi-ms.obo"), False)
-        _ims = Ontology(os.path.join(dirname, "imagingMS.obo"), False)
-        _ims.terms.update(_ms.terms)
-    else:
-        _ms, _ims = None, None
-        _ims.merge(_ms)
 
-    PARSERS = {'mzML': mzml.mzMLmeta,
-                'imzML': mzml.imzMLmeta}
-
-    ONTOLOGIES = {'mzML': _ms,
-                   'imzML': _ims}
-
+def _multiparse(filepath):
     print('Parsing file: {}'.format(filepath))
-    parser = PARSERS[filepath.split(os.path.extsep)[-1]]
-    ont = ONTOLOGIES[filepath.split(os.path.extsep)[-1]]
-
-    meta = parser(filepath, ont).meta
-
-    metalist.append(meta)
+    parser = _PARSERS[filepath.split(os.path.extsep)[-1]]
+    ont = _ONTOLOGIES[filepath.split(os.path.extsep)[-1]]
+    return parser(filepath, ont).meta_isa
 
 def merge_spectra(metalist):
 
@@ -188,22 +181,6 @@ def full_parse(in_dir, out_dir, study_identifier, usermeta=None, split=True, mer
     :param str out_dir:          path to out directory
     :param str study_identifier: name of the study (directory to create)
     """
-    dirname = os.path.dirname(os.path.realpath(__file__))
-    if not any(x in sys.argv for x in ('-h', '--help', '--version')):
-        ms = Ontology(os.path.join(dirname, "psi-ms.obo"), False)
-        ims = Ontology(os.path.join(dirname, "imagingMS.obo"), False)
-        ims.terms.update(ms.terms)
-    else:
-        ms, ims = None, None
-        ims.merge(ms)
-
-    PARSERS = {'mzML': mzml.mzMLmeta,
-                'imzML': mzml.imzMLmeta}
-
-    ONTOLOGIES = {'mzML': ms,
-                   'imzML': ims}
-
-
 
     # get mzML file in the example_files folder
     if os.path.isfile(in_dir) and tarfile.is_tarfile(in_dir):
@@ -222,31 +199,16 @@ def full_parse(in_dir, out_dir, study_identifier, usermeta=None, split=True, mer
         mzml_files = [mzML for mzML in glob.glob(mzml_path)]
         #mzml_files.sort()
 
-    # if multip:
-    #     pool = Pool(multip)
+    if multip:
+        pool = Pool(multip)
 
-    manager = Manager()
-    metalist = manager.list()
-
-
+    metalist = []
     if mzml_files:
-        # store the first elemnts extension
-        if compr:
-            ext1 = mzml_files[1].name.split(os.path.extsep)[-1]
-        else:
-            ext1 = mzml_files[1].split(os.path.extsep)[-1]
 
         if multip:
-            jobs = []
-
-            for i in mzml_files:
-                p = Process(target=_multiparse, args=(i, metalist))
-                jobs.append(p)
-                p.start()
-
-            for proc in jobs:
-                proc.join()
-
+            metalist = pool.map(_multiparse, mzml_files)
+            pool.close()
+            pool.join()
 
 
         # get meta information for all files
@@ -277,14 +239,14 @@ def full_parse(in_dir, out_dir, study_identifier, usermeta=None, split=True, mer
                 else:
                     ext = i.split(os.path.extsep)[-1]
 
-                parser = PARSERS[ext]
-                ont = ONTOLOGIES[ext]
+                parser = _PARSERS[ext]
+                ont = _ONTOLOGIES[ext]
 
                 metalist.append(parser(i, ont).meta)
 
         # update isa-tab file
 
-        if merge and ext1=='imzML':
+        if merge and ext=='imzML':
             if verbose:
                 print('Attempting to merge profile and centroid scans')
             metalist = merge_spectra(metalist)
@@ -293,7 +255,7 @@ def full_parse(in_dir, out_dir, study_identifier, usermeta=None, split=True, mer
         if metalist:
             if verbose:
                 print("Parsing mzML meta information into ISA-Tab structure")
-            isa_tab_create = isa.ISA_Tab(out_dir, study_identifier, usermeta or {}).write(metalist, ext1, split)
+            isa_tab_create = isa.ISA_Tab(out_dir, study_identifier, usermeta or {}).write(metalist, ext, split)
 
     else:
         warnings.warn("No files were found in {}.".format(in_dir), UserWarning)
@@ -340,7 +302,4 @@ def compr_extract(compr_pth, type_):
 
 
 if __name__ == '__main__':
-    freeze_support()
     run()
-
-
